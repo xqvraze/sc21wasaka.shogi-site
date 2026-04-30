@@ -24,6 +24,9 @@ var ctx;
 //コンテキストで使用するテキストサイズ
 var ctx_font_size;
 
+//管理用画面の表示
+var manage_count = 0;
+
 //初期配置
 //熟語漢字の配置
 var quiz_set_places = [
@@ -39,6 +42,7 @@ var select_places = [
   [ 7, 1],
   [ 7, 3],
 ];
+
 
 //問題漢字
 var Quiz_Kanji = ["近道", "歩道", "道草", "道楽"];
@@ -69,13 +73,16 @@ var fontcolor = ["black","maroon"];
 // 	: gray
 //	: bule
 // 	: red
-var boxcolor = ["LimeGreen","gray","blue","red"];
+//var boxcolor = ["LimeGreen", "gray", "blue", "red", "brawn"];
+var boxcolor = ["LimeGreen", "gray", "blue", "red"];
+
 
 //各マス目の背景色
 //背景 	: LimeGreen
 //問題 	: khaki
 //回答	: white
-var fillcolor = ["LimeGreen","Khaki","white"];
+//var fillcolor = ["LimeGreen", "Khaki", "white"];
+var fillcolor = ["LimeGreen", "Khaki", "white", "blue", "red"];
 
 //1マス目のサイズ 64×64
 var psize = 64;
@@ -100,6 +107,9 @@ var inPrace = -1;
 //ゲームクリアフラグ
 var game_clear = false;
 
+//元号モード
+var IsGengouMode = false;
+
 //盤面
 var board_history = [];
 
@@ -109,8 +119,42 @@ var QuizIndex = 0;
 //管理モード
 var manage_mode = true;
 
+//選択肢を表示しないモード 2022/8/31
+var IsDifficultMode = false; 
+
+//選択肢を表示 2022/8/31
+var IsSelectKanjiShow = true;
+
 //タブレット、スマホ端末のOS名
 var username = ["ipad","iphone","android"];
+
+var audioC = document.getElementById("audioC");
+var audioB = document.getElementById("audioB");
+
+//元号漢字データ
+var gengou_kanji = [];
+
+//元号漢字のオブジェクトの作成 2022/8/13
+/*
+  kanji : 漢字
+  times : 回数
+  pre_times : 前出現回数
+  back_kanji : 後ペア漢字
+  back_times : 後出現回数
+  pre_times : 前ペア漢字
+*/
+function gengou_kanji_piece(){
+  this.inPlace = -1;
+  this.kanji = '';
+  this.kanji_color = 0;
+  this.times = 0;
+  this.pre_times = 0;
+  this.back_kanji ='';
+  this.back_times = 0;
+  this.pre_kanji = '';
+  this.visible = false;
+  this.back_color = 0;
+}
 
 //各マス目オブジェクトの作成
 /*
@@ -130,7 +174,7 @@ function piece(){
   //漢字
   this.kanji = "";
 
- //漢字の表示色
+　//漢字の表示色
   this.kanji_color = 0;
 
   //ヒント
@@ -143,25 +187,23 @@ function piece(){
   this.y = -1;
 };
 
-//正解音
+//正解音を鳴らす
 //2022/7/11
 function correct_sound(){
-  audio.src = "Quiz-Correct_Answer02-1.mp3";
-  audio.play();
+  audioC.play();
 }
 
-//不正解音
+//不正解音を鳴らす
 //2022/7/11
 function wrong_sound(){
-  audio.src = "Quiz-Wrong_Buzzer02-1.mp3";
-  audio.play();
+  audioB.play();
 }
 
 //setups配列から、作業盤、選択肢盤の設定情報をセット
 function load_setups(){
  board[2][2].inPlace = 1; 	// 空白設定
 
- //問題用漢字表示場所  
+  //問題用漢字表示場所  
   for (var i = 0;i < quiz_set_places.length; i++){
     x = quiz_set_places[i][0];
     y = quiz_set_places[i][1];
@@ -177,12 +219,24 @@ function load_setups(){
 }
 
 //問題作成 & セット
-//2022/7/11
+//2022/7/11 2022/8/31更新
 function make_Quiz(){
 
   //問題用の熟語配列を作成
   make_Quiz_set();
 
+  //選択肢を最初から表示しないモードの場合の処理 2022/8/31
+  var Difficultflg = document.getElementById("forDifficult");
+
+  IsDifficultMode = Difficultflg.checked;
+
+  if(IsDifficultMode){
+    IsSelectKanjiShow = false;
+  }else{
+    IsSelectKanjiShow = true;
+  }
+
+  //これは実質は使っていない
   board[2][2].kanji = correct_Kanji;
   board[2][2].visible = false;
 
@@ -206,7 +260,8 @@ function make_Quiz(){
     y = select_places[i][1];  
     board[y][x].kanji = select_Kanji[index];
     board[y][x].kanji_color = 1;
-    board[y][x].visible = true;
+    //2022/8/31 更新
+    board[y][x].visible = IsSelectKanjiShow
     index += 1;
   }
 }
@@ -244,7 +299,7 @@ function get_select_kanji_index(kanji){
 }
 
 //熟語に使われている漢字を習い終わっている学年を取得
-function get_kanji_grade(kanjiA,kanjiB){
+function get_kanji_gradeAB(kanjiA,kanjiB){
 　//学年レベル数取得
 　var element = document.getElementById("select_level")
   var grade_number = element.length;
@@ -279,7 +334,7 @@ function get_kanji_grade(kanji){
 　var element = document.getElementById("select_level")
   var grade_number = element.length;
 
-  for(var i = 1;i < element.length;i++){
+  for(var i = 1;i < element.length + 1;i++){
     var idx = kanji_grader[i].indexOf(kanji);
     if(idx != -1){
       return i;        
@@ -298,13 +353,15 @@ function able_to_ask(kanji){
     strX = only_two_idioms[i];
     var idx = strX.indexOf(kanji);
     if(idx != -1){
+
       var pair_kanji = strX.charAt(1-idx);      
       var pair_level = get_kanji_grade(pair_kanji);
+
       if(pair_level <= grade_level){
         if(idx == 0){
-          first += 1;
+          first++;
         }else{
-          second += 1;
+          second++;
         } 
       }
     }
@@ -370,7 +427,7 @@ function check_idioms_number(){
     var pair_Kanji1 = strX.charAt(1);
 
     //漢字を習う学年を取得
-    var grade_level = get_kanji_grade(pair_Kanji0, pair_Kanji1);
+    var grade_level = get_kanji_gradeAB(pair_Kanji0, pair_Kanji1);
 
     grade_idioms[grade_level] += 1;
   }
@@ -462,7 +519,6 @@ function make_Quiz_set(){
     //学年レベルの漢字数取得
     var len_ary = kanji_grader[grade_level_value].length;
   }catch(e){
-    console.log(grade_level_value);
     //問題作成のやり直し
     make_Quiz_set();
     return;
@@ -472,7 +528,7 @@ function make_Quiz_set(){
   var idx = Math.floor(Math.random() * len_ary);
 
   //正解にする漢字
-  correct_Kanji = kanji_grader[str_level * 1][idx];
+  correct_Kanji = kanji_grader[grade_level_value][idx];
   
   //直近と同じ答えは使わない
   if(answer_lists.indexOf(correct_Kanji) != -1){
@@ -573,9 +629,79 @@ function make_Quiz_set(){
   //解答漢字リスト
   answer_lists.push(correct_Kanji);
  
-  if(answer_lists.length > 15){
+  if(answer_lists.length > 20){
     answer_lists.splice(0, 1);
   }
+}
+
+//元号モードサポート 2022/8/15
+function initGengou(){
+  IsGengouMode = true;
+
+  //マス目の横 9マス
+  bw = 10;
+
+  //マス目の縦 4マス(固定)
+  bh = 7;
+
+  //1マス 64、横9マス、縦5マス
+  canvas.width = 64 * bw;	//64×9
+  canvas.height = 64 * bh;	//64×5
+
+  //2次元コンテキストとして使用
+  ctx = canvas.getContext('2d');
+
+  //使用フォント
+  ctx.font = "48px 'MS Pゴシック'";
+  //フォントサイズを数値に変換
+  //文字列を * 1演算により強制的に数値に変換
+  var text = ctx.font;
+  	/* テキスト描画の基準点を調べる
+		var m=ctx.measureText(text);
+		alert(m.actualBoundingBoxLeft);		//基準点から左枠まで -1 
+		alert(m.actualBoundingBoxRight); 	//基準点から右枠まで 約240
+		alert(m.actualBoundingBoxAscent); 	//基準点から上枠まで 21
+		alert(m.actualBoundingBoxDescent);	//基準点から下枠まで 5
+	*/ 
+  text = text.slice(0,text.indexOf('px'));
+  ctx_font_size = text * 1;
+
+  //端末のOSタイプ取得
+  user = window.navigator.userAgent.toLowerCase();
+
+  //端末を判断して、タブレットおよびスマホではタッチ、PCではマウスダウンのイベントリスナを登録
+  var touch_flg = false;
+  for(var i=0; i<username.length; i++){
+    if(user.indexOf(username[i]) >= 0){
+	touch_flg = true;
+	break;
+    }
+  };
+
+  if (touch_flg){
+    document.addEventListener("touchstart", touchstart);
+  } else {
+    document.addEventListener("mousedown", mousedown);
+  };
+
+  //キャンパス全体の盤board配列の作成(横bwマス×縦bhマス)
+  //各マス目のオブジェクトを格納
+  board = new Array(bh);
+  for (var y = 0;y < bh; y++) {
+    board[y] = new Array(bw);
+    for (var x = 0;x < bw; x++) {
+      var Idx = bw * y + x;
+      if(Idx < gengou_kanji.length){
+        board[y][x] = gengou_kanji[Idx];
+//console.log("x=" +x+ " y=" +y + " Idx=" + Idx+ " "+ board[y][x].kanji+ " "+ board[y][x].times);
+      }else{
+        board[y][x] = new gengou_kanji_piece();
+      }
+    };
+  };
+
+  //再描画
+  redraw();
 }
 
 //ゲーム開始
@@ -584,12 +710,20 @@ function init(){
   game_clear = false;
   moves_count = 0;
 
+  IsGengouMode = false;
+
+  //マス目の横 9マス
+  bw = 9;
+
+  //マス目の縦 4マス(固定)
+  bh = 5;
+
   //id = 'world'のエレメントをキャンバスとする
   canvas = document.getElementById("world");
   //キャンバスサイズ 576×320
   //1マス 64、横9マス、縦5マス
-  canvas.width = 576;	//64×9
-  canvas.height = 320;	//64×5
+  canvas.width = 64 * bw;	//64×9
+  canvas.height = 64 * bh;	//64×5
 
   //2次元コンテキストとして使用
   ctx = canvas.getContext('2d');
@@ -664,8 +798,10 @@ function mousedown(e){
   touchpiece(e.clientX ,e.clientY);
 }
 
-//座標から指定されたマス目に関する処理
-function touchpiece(tx,ty){
+
+//座標から指定されたマス目に関する処理(元号モード) 2022/8/15
+function gengoutouch(tx,ty){
+
   //横マス目の位置計算
   cx = Math.floor((tx-8)/psize);
 
@@ -677,32 +813,134 @@ function touchpiece(tx,ty){
 	return;
   }
 
- //問題用漢字表示場所 : ヒント表示  
+  //一旦、すべてのバックカラーをリセット
+  for(var y = 0;y < bh;y++){
+    for(var x = 0;x < bw;x++){
+      board[y][x].back_color = 0;
+    }
+  }
+
+  //指定漢字
+  var select_kanji = board[cy][cx].kanji;
+  
+  //指定漢字のマス目の色
+  board[cy][cx].back_color = 1;
+
+  //前ペア漢字
+  var back_kanji = board[cy][cx].back_kanji;
+
+  //前ペア漢字のマス目の色指定
+  for(var y = 0;y < bh;y++){
+    for(var x = 0;x < bw;x++){
+      if(back_kanji.indexOf(board[y][x].kanji) >= 0){
+        board[y][x].back_color = 2;
+      }
+    }
+  }
+
+  //後ペア漢字
+  var pre_kanji = board[cy][cx].pre_kanji;
+
+  for(var y = 0;y < bh;y++){
+    for(var x = 0;x < bw;x++){
+      if(pre_kanji.indexOf(board[y][x].kanji) >= 0){
+        board[y][x].back_color = 3;
+      }
+    }
+  }
+  redraw();
+}
+
+//座標から指定されたマス目に関する処理 2022/8/31更新
+function touchpiece(tx,ty){
+  if(IsGengouMode){
+    gengoutouch(tx,ty);
+    return;
+  }
+
+  //横マス目の位置計算
+  cx = Math.floor((tx-8)/psize);
+
+  //縦マス目の位置計算
+  cy = Math.floor((ty-8)/psize);
+
+  //まずマス目でなかった場合は何もしない
+  if ((cx < 0) || (cx >= bw) || ( cy < 0) || ( cy >= bh)){
+	return;
+  }
+
+  //問題用漢字表示場所 : ヒント表示  
   for (var i = 0;i < quiz_set_places.length; i++){
-    x = quiz_set_places[i][0];
-    y = quiz_set_places[i][1];
+    var x = quiz_set_places[i][0];
+    var y = quiz_set_places[i][1];
     if ((cx == x) && (cy == y)){
       show_hint(x,y);
       return;
     }
   }
 
-  //回答選択肢の漢字表示場所 : 回答チェック
-  for (i = 0;i < select_places.length; i++){
-    x = select_places[i][0];
-    y = select_places[i][1];
-    if ((cx == x) && (cy == y)){
-      check_quiz(x,y);
-      return;
+  //2022/8/31 更新
+  if(IsSelectKanjiShow){
+    //回答選択肢の漢字表示場所 : 回答チェック
+    for (i = 0;i < select_places.length; i++){
+      x = select_places[i][0];
+      y = select_places[i][1];
+      if ((cx == x) && (cy == y)){
+        check_quiz(x,y);
+        manage_count++;
+        return;
+      }
+    }
+  }
+
+  //中央の正解場所のクリックの場合の処理 2022/8/31
+  if(IsDifficultMode){
+    if ((cx == 2) && (cy == 2)){
+      IsSelectKanjiShow = true;
+
+      //回答選択肢の漢字表示場所
+      index = 0;
+      for (i = 0;i < select_places.length; i++){
+        x = select_places[i][0];
+        y = select_places[i][1];  
+       //2022/8/31 更新
+       board[y][x].visible = IsSelectKanjiShow
+       index += 1;
+      }
+      redraw();
     }
   }
 }
 
+//指定漢字の熟語リスト書き出し 2022/8/3
+function output_idioms(kanji){
+　var strXout = "";
+  for(var i = 0;i < only_two_idioms.length - 1; i++){
+    var strX = only_two_idioms[i];
+    var id = strX.indexOf(kanji);
+
+    if(id != -1){
+      strXout += two_idioms[i] + "\r\n";
+    }
+  }
+
+  //テキストデータをローカルのダウンロードフォルダにダウンロードする形で作成
+  //ファイル名は重複すると自動的増えていく
+  const a = document.createElement('a');
+  a.href = 'data:text/plain,' + encodeURIComponent(strXout);
+  a.download = '個別漢字の熟語リスト.txt';
+  
+  a.click();                                 
+}
+
 //正誤判定 2022/7/11
 function check_quiz(x,y){
-  if (board[y][x].kanji == correct_Kanji){
+  var kanji = board[y][x].kanji;
+  if (kanji == correct_Kanji){
     //正解音
     correct_sound();
+
+    manage_count = 0;
 
     //問題作成
     make_Quiz();
@@ -712,6 +950,23 @@ function check_quiz(x,y){
   }else{
     //不正解音
     wrong_sound();
+    
+    var manageflg = document.getElementById("forManage");
+    if(manageflg.checked){ 
+      if(able_to_ask(kanji)){
+        board[y][x].kanji_color = 0;
+      }
+      //個別漢字の熟語リスト書き出し
+      output_idioms(kanji);
+    }
+
+    if(manage_count > 10){
+        //管理画面表示
+        show_manage();
+    }
+
+    //再描画
+    redraw();
   }
 }
 
@@ -734,7 +989,6 @@ function show_hint(x,y){
   px = psize;
   py = 4 * psize
   
-  ctx.font = "24px 'MS Pゴシック'";
   ctx.fillStyle = fontcolor[0];
   ctx.fillText(hint, px, py+ctx_font_size,300);
   ctx.font = "48px 'MS Pゴシック'"; 
@@ -746,6 +1000,7 @@ function show_hint(x,y){
  y 	: 全体での縦Y位置
  color  : 背景色(問題用漢字、回答欄漢字、選択肢漢字)
 ******/
+//2022/8/31 更新
 function drawpiece(x,y,color){
 
   //指定位置の左上の座標
@@ -789,38 +1044,44 @@ function drawpiece(x,y,color){
   ctx.fillText(kanji_text, px+((psize - ctx_font_size) / 2), py+ctx_font_size,300);
 }
 
-//クイズセット追加 2022/5/26
-function Add_QuizSet(){
-  QuizSetData0 = QuizSetData0.concat(QuizSetData1);
-  AnswerSetData0 = AnswerSetData0.concat(AnswerSetData1);
-
-  //クイズリスト作成
-  makeQuizList();
-
-  //正答例リスト作成
-  makeAnswerList();
-}
-
 //キャンパスすべてのマス目の再描画
-//個別のマス目の状態を調べ
+//個別のマス目の状態を調べ 2022/8/31更新
 function redraw(){
-  for (y=0; y<bh; y++){
-    //表の色のみの変数(常にc=1)
-    var c=1;
-    for (x=0; x<bw; x++){
-      if (board[y][x].inPlace == -1){
-     c = 0;
-      }else{
-        if (board[y][x].inPlace == 0){
-          c = 1;
+  
+  if(IsGengouMode){
+    //元号モード時
+    for (var y = 0; y < bh; y++){
+      var c=1;
+      for (var x = 0; x < bw; x++){
+        if (board[y][x].inPlace == -1){
+          c = 0;
         }else{
-          c = 2;
+          c = board[y][x].back_color;
         }
+        //マス目の描写
+        drawpiece(x,y,c);
       }
-      //マス目の描写
-      drawpiece(x,y,c);
+    }
+  }else{
+    for (y = 0;y < bh;y++){
+      //表の色のみの変数(常にc=1)
+      var c=1;
+      for (x=0; x<bw; x++){
+        if (board[y][x].inPlace == -1){
+        c = 0;
+        }else{
+          if (board[y][x].inPlace == 0){
+            c = 1;
+          }else{
+            c = 2;
+          }
+        }
+        //マス目の描写
+        drawpiece(x,y,c);
+      }
     }
   }
+
   ctx.fillStyle = fontcolor[0];
 
   //描画内容の反映
@@ -857,111 +1118,155 @@ function redraw(){
   }   
 }
 
-//棋譜洗練 2022/5/23
-//棋譜の中で堂々巡り(同じ局面)している部分をそぎ落とす
-function kifu_shorter(){
-  var before_length = board_history.length;
-  var idx = 0;
-  var after_idx = -1;
-  var break_flg = false;
-  while(true){
-    break_flg = false;
-    for(var i = idx;i < board_history.length - 1;i++){
-      //同じ局面が以降の棋譜にももう一度現れるかどうか
-      var after_idx = board_history.indexOf(board_history[i], i + 1);
+//元号漢字の分析 2022/8/13
+function get_kanji_analize_data(kanji){
+  var times = 0;
+  var pre_times = 0;
+  var back_kanji = "";
+  var back_times = 0;
+  var pre_kanji = "";
 
-      //同じ局面が以降の棋譜にももう一度現れた場合      
-      if(after_idx != -1){
-        board_history.splice(i,after_idx - i);
-        idx = i;
-        break_flg = true;
-        break;
-      }  
+  for(var i = 0;i < gengou.length;i++){
+    var gengou_idiom = gengou[i];
+
+    var kanji1 = gengou_idiom[0];
+    var kanji2 = gengou_idiom[1];
+
+    if(kanji == kanji1){
+      times++;
+      pre_times++;
+      back_kanji += kanji2;
     }
-    if(break_flg == false){
-      break;
-    }         
+    if(kanji == kanji2){
+      times++;
+      back_times++;
+      pre_kanji += kanji1;
+    }  
   }
 
-  if(board_history.length != before_length){
-    moves_count = 0;
+  return [times, pre_times, back_kanji, back_times, pre_kanji]; 
+}
 
-    //盤面を表す文字列を受け取る
-    var strX = board_history[moves_count];
-
-    //文字列から作業盤のboard配列へ戻す
-    board_form_strs(strX);
-    
-    //再描画
-    redraw();
-
-    //棋譜手数表示更新
-    strX = document.getElementById("min_moves").innerHTML;
+//元号漢字の全出現回数順並び替え 2022/8/17
+function AllTimesSort(){
+  gengou_kanji.sort(function(a,b){
+    return(a.times > b.times) ? -1 : 1;
+  });
   
-    strX = strX.slice(0 , strX.indexOf('手')) + '手 棋譜手数' + (board_history.length - 1) +'手';      
-    document.getElementById("min_moves").innerHTML = strX;
-  }    
-}
-
-//最初に戻る 2022/5/26
-function MoveStart(){
-  //ゲーム進行中のみ実行
-  if(mode == 1){
-    moves_count = 0;
-
-    //盤面を表す文字列を受け取る
-    var strX = board_history[moves_count];
-
-    //文字列から作業盤のboard配列へ戻す
-    board_form_strs(strX);
-    
-    //再描画
-    redraw();
+  //出現回数ゼロをわかりやすく
+  for(var i = 0 ;i < gengou_kanji.length;i++){
+    if(gengou_kanji[i].times == 0){
+      gengou_kanji[i].kanji_color = 1;
+    }else{
+      gengou_kanji[i].kanji_color = 0;
+    }
   }
+
+  initGengou();
 }
 
-//一手戻る
-function prevMove(){
-  //ゲーム進行中のみ実行
-  if(mode == 1){
-    moves_count -= 1;
+//元号漢字の前側出現回数順並び替え 2022/8/17
+function PreTimesSort(){
+  gengou_kanji.sort(function(a,b){
+    return(a.pre_times > b.pre_times) ? -1 : 1;
+  });
 
-    if(moves_count < 0){
-      moves_count = 0;
-      return;
+  //出現回数ゼロをわかりやすく
+  for(var i = 0 ;i < gengou_kanji.length;i++){
+    if(gengou_kanji[i].pre_times == 0){
+      gengou_kanji[i].kanji_color = 1;
+    }else{
+      gengou_kanji[i].kanji_color = 0;
+    }
+  }
+  
+  initGengou();
+}
+
+//元号漢字の後側出現回数順並び替え 2022/8/17
+function BackTimesSort(){
+  gengou_kanji.sort(function(a,b){
+    return(a.back_times > b.back_times) ? -1 : 1;
+  });
+
+  //出現回数ゼロをわかりやすく
+  for(var i = 0 ;i < gengou_kanji.length;i++){
+    if(gengou_kanji[i].back_times == 0){
+      gengou_kanji[i].kanji_color = 1;
+    }else{
+      gengou_kanji[i].kanji_color = 0;
+    }
+  }
+  
+  initGengou();
+}
+
+//元号漢字分析 2022/8/13
+//元号漢字の分析を行う
+//出現回数
+//前出現回数
+//後ペア漢字
+//後出現回数
+//前ペア漢字ほほほ
+function gengou_kanji_analize(){
+  var strX = '';
+  var Kanji_list = '';
+  gengou_kanji = [];
+  for(var i = 0;i < gengou.length;i++){
+    for(var j = 0;j < 2;j++){
+      strX = gengou[i];
+      strX = strX[j];
+      if(Kanji_list.indexOf(strX) == -1){
+        Kanji_list += strX;
+        var gengou_one_kanji = new gengou_kanji_piece;
+        var gengou_kanji_ary = get_kanji_analize_data(strX);
+        gengou_one_kanji.inPlace = 0;
+        gengou_one_kanji.kanji = strX;
+        gengou_one_kanji.times = gengou_kanji_ary[0];
+        gengou_one_kanji.pre_times = gengou_kanji_ary[1];
+        gengou_one_kanji.back_kanji = gengou_kanji_ary[2];
+        gengou_one_kanji.back_times = gengou_kanji_ary[3];
+        gengou_one_kanji.pre_kanji = gengou_kanji_ary[4];
+        gengou_one_kanji.visible = true;
+        gengou_one_kanji.back_color = 0;
+ 
+        gengou_kanji.push(gengou_one_kanji);
+      } 
+    }
+  }
+
+  /*******************
+   元号分析.txtとして保存
+   ファイルの読み込みは非同期処理で行われているので
+   読み込めという命令の後、すぐにこちらの命令にくるので、
+   ファイルの読み込み終了後の変数をここで保存しようとしても期待通りの結果が得られない
+   ファイルの読み込みが終了するように適当に待ち時間を入れる
+  *******************/
+/******
+  分析ファイルの書き出しは毎回は不要
+  setTimeout(function(){
+    //元号分析.txtファイル         
+    dataStr = '';
+    for(i = 0;i < gengou_kanji.length;i++){
+      dataStr += gengou_kanji[i].kanji + ' ' + gengou_kanji[i].times + '回出現' + '\r\n';
+      dataStr += '前' + gengou_kanji[i].pre_times + '回出現　' + gengou_kanji[i].back_kanji + '\r\n';
+      dataStr += '後' + gengou_kanji[i].back_times + '回出現　' + gengou_kanji[i].pre_kanji + '\r\n';
+      dataStr += '\r\n';
     }
 
-    //盤面を表す文字列を受け取る
-    var strX = board_history[moves_count];
+    //テキストデータをローカルのダウンロードフォルダにダウンロードする形で作成
+    //ファイル名は重複すると自動的増えていく
+    const a = document.createElement('a');
+    a.href = 'data:text/plain,' + encodeURIComponent(dataStr);
+    a.download = '元号分析.txt';         
+    a.click();
+  },1000);
+*******/
+　//元号用のボードに切り替え
+  IsGengouMode = true;
 
-    //文字列から作業盤のboard配列へ戻す
-    board_form_strs(strX);
-    
-    //再描画
-    redraw();
-  }
-}
-
-//一手進む
-function nextMove(){
-  //ゲーム進行中のみ実行
-  if(mode == 1){
-    moves_count += 1;
-
-    if(moves_count == board_history.length){
-      moves_count = board_history.length-1;
-      return;
-    }
-
-    //盤面を表す文字列を受け取る
-    var strX = board_history[moves_count];
-
-    //文字列から作業盤のboard配列へ戻す
-    board_form_strs(strX);
-    
-    //再描画
-    redraw();
-  }
+  //元号ボード用初期化
+  initGengou();
 }
 
 //ゲームをやり直す
@@ -1238,16 +1543,6 @@ function saveQuiz(){
 function updateSetups(){
 }
 
-//問題レベル選択により使用漢字を制限する 2022/7/12
-//選択メニューが選択された場合
-function select_level_menu(obj){
-  //クイズリスト作成
-  makeQuizList();
-
-  //正答例リスト作成
-  makeAnswerList();
-}
-
 //リストから選択した問題へGo 2022/5/20
 function gotoQuiz(){
 
@@ -1339,8 +1634,8 @@ function checkQuiz_Date(){
 //ヒント未設定の場合も対応
 function make_only_two_idioms(){   
   var id = 0;
- var strX = '';
- var strX1 = '';
+  var strX = '';
+  var strX1 = '';
   for(i = 0;i < two_idioms.length -1;i++){
     id = two_idioms[i].indexOf(' ');
     if (id == -1){
@@ -1457,6 +1752,32 @@ function check_idiom_same(){
     a.download = '二字熟語.txt';         
     a.click();
   },1000);
+
+  /*******************
+   gengou_data.txtとして保存
+   ファイルの読み込みは非同期処理で行われているので
+   読み込めという命令の後、すぐにこちらの命令にくるので、
+   ファイルの読み込み終了後の変数をここで保存しようとしても期待通りの結果が得られない
+   ファイルの読み込みが終了するように適当に待ち時間を入れる
+   ここでは、ファイルの持ち時間はファイル数×10msとする
+  *******************/
+  setTimeout(function(){
+    //gengou_data.jsファイル         
+    dataStr = 'var gengou =[\r\n';
+
+    for(i = 0;i < gengou.length;i++){
+      dataStr += '"' + gengou[i] + '",\r\n';
+    }
+        
+    dataStr += ']';
+
+    //テキストデータをローカルのダウンロードフォルダにダウンロードする形で作成
+    //ファイル名は重複すると自動的増えていく
+    const a = document.createElement('a');
+    a.href = 'data:text/plain,' + encodeURIComponent(dataStr);
+    a.download = 'gengou_data.txt';         
+    a.click();
+  },1000);
 }
 
 //問題読み込み(配列から)
@@ -1464,7 +1785,6 @@ function check_idiom_same(){
 function readQuizIndex(){
   //ゲームを初期化
   init();
-
 }
 
 //リストから選択したファイルの正解例へGo 2022/5/24
@@ -1492,6 +1812,49 @@ function gotoAnswer(){
 //棋譜読み込み(配列から) 2022/5/24
 //AnswerSetData配列の中で正解例リストから選択された棋譜を読込
 function readKifuIndex(AnswerIndex){
+}
+
+//元号ファイル読込 2022/8/13
+
+/************************
+*ファイルを選択して読み込む
+*Gengous配列に追加していく
+*************************/
+
+//ファイル読み込み関連グローバル変数
+var load_gengou_btn = document.querySelector("#load_gengou_btn");
+load_gengou_btn.addEventListener('change', upload, false);
+
+function upload(evt){
+  var strX = '';
+  
+  //元号配列を初期化
+  gengou = [];
+               
+  var file = evt.target.files[0];
+              
+  var reader= new FileReader();
+                
+  //ファイル読み取りを実行
+  reader.readAsText(file);          
+      
+  //ファイル内容を表示
+  //非同期処理読み込めたら
+  reader.onload = function(event){
+    var result = event.target.result;   
+
+    //改行コード'\r\n'で分割
+    var lines = result.split('\r\n');
+            
+    //各種データセット                    
+    for(var i = 0;i < lines.length;i++){
+      two_idioms.push(lines[i]); 
+      gengou.push(lines[i]);               
+    }
+
+　　//二重熟語重複チェック
+    check_idiom_same();
+  }                                                
 }
 
 //二字熟語ファイル読込
@@ -1536,22 +1899,6 @@ function read_idiom(evt){
 　　//二重熟語重複チェック
     check_idiom_same();
   }                                                
-}
-
-//問題ファイル読込
-/************************
-*ファイルを選択して読み込む
-*複数のファイルを一気に読み込むこともできる
-*一つ目のファイルはその状態でゲームを開始できるように盤面の設定として読み込む
-*すべてのファイルはそのままの状態で文字列配列として、QuizSetData配列に追加していく
-*問題名が空欄であれば、ファイル名をセットする
-*************************/
-
-//ファイル読み込み関連グローバル変数
-var loadbtn = document.querySelector("#loadbtn");
-loadbtn.addEventListener('change', upload, false);
-
-function upload(evt){
 }
 
 //次の問題

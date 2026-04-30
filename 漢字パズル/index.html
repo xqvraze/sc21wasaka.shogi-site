@@ -10,7 +10,7 @@
     <canvas id="world"></canvas>
     <form onsubmit="return false">
         <label>使用する漢字の学習学年選択:
-          <select id="select_level" onchange="select_level_menu(this)">
+          <select id="select_level">
             <option value="1">小学1年</option>
             <option value="2">小学2年</option>
             <option value="3">小学3年</option>
@@ -23,39 +23,42 @@
           </select>
         </label>
 
-
+        <div>
+          <input type="checkbox" id="forDifficult" name="forDifficult">
+          <label for="forDifficult">選択肢を最初は表示しない</lable>
+          <p>中央の青縁の白枠をクリックすると選択肢が表示される</p>
+        </div>
 
 　　　　<div class="manage">
+   
+        <div>
+          <input type="checkbox" id="forManage" name="manageCheck">
+          <label for="manageCheck">管理用</lable>
+        </div>
 
- 	<input type="button" value="最初に戻る" onClick="MoveStart()"><input type="button" value="一手戻る" onClick="prevMove()"><input type="button" value="一手進む" onClick="nextMove()"><input type="button" id="save_kifu" value="棋譜保存" onClick="savekifu()"><span>二字熟語ロード</span><input type="file" accept=".txt" id="read_idiom_btn"><br><br>
+ 	<input type="button" value="全出現回数順" onClick="AllTimesSort()"><input type="button" value="前側出現回数順" onClick="PreTimesSort()"><input type="button" value="後側出現回数順" onClick="BackTimesSort()"><input type="button" id="save_kifu" value="棋譜保存" onClick="savekifu()"><span>二字熟語ロード</span><input type="file" accept=".txt" id="read_idiom_btn"><br><br>
 
         <div id="quiz_list" display="inline">問題リスト表示</div><div class="clear_point" id="answer_list">解答リスト</div><br>
  	<input type="button" value="前の問題" onClick="prevQuiz()"><span><input type="button" value="次の問題" onClick="nextQuiz()"></span><span id="quiz_name">問題名表示欄</span><span id="min_moves">最短手数</span><br>
 	<input type="text" class="manage" id="username" value=""><input type="button" class="manage" id="btn_usename" value="登録" onClick="makeReloadStr()"><span id="Reword" class="manage">復活の呪文</span>
 	<input type="button" value="問題保存" onClick="saveQuiz()">	<input type="text" id="filename" value="">
-	<span>問題ロード</span><input type="file" accept=".dat" multiple id="loadbtn">
+	<span>元号ロード</span><input type="file" accept=".txt" id="load_gengou_btn">
         <br>
         <input type="button" value="回答数チェック" onClick="check_answer_number()">
 	<input type="button" value="学年別未使用漢字チェック" onClick="check_kanji_use_number()"><input type="button" value="学年別熟語数チェック" onClick="check_idioms_number()"><br>
 	<input type="button" value="熟語重複チェック" onClick="check_idiom_same()">
 
-
           <input type="text" id="seek_max" value="20">最大探索手数<input type="button" value="自動解答" onClick="AutoAnswer()"><span id="min_moves_answer">自動解答手数</span><br>
-          <input type="button" value="棋譜洗練" onClick="kifu_shorter()"><input type="button" value="問題入力チェック" onClick="checkQuiz_Date()">
+          <input type="button" value="元号漢字分析" onClick="gengou_kanji_analize()"><input type="button" value="問題入力チェック" onClick="checkQuiz_Date()">
         </div>
     </form>
 
     <script src="stools.js"></script>
     <script src="setting.js"></script>
     <script src="idiom_data.js"></script>
+    <script src="gengou_data.js"></script>
     <script src="kanji_grade_data.js"></script>
     <script src="Solver.js"></script>
-    <script src="QuizSetData1.js"></script>
-    <script src="QuizSetData0.js"></script>
-    <script src="QuizSetData.js"></script>
-    <script src="AnswerSetData1.js"></script>
-    <script src="AnswerSetData0.js"></script>
-    <script src="AnswerSetData.js"></script>
 
     <!- headタグ内のような上方配置ではファイル読み込みがうまく動作しなかった -->
     <script src="main.js"></script>
