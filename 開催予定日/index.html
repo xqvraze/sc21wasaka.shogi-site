@@ -1,0 +1,64 @@
+﻿<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+    <!-- 文字セットの設定 -->
+    <meta charset="utf-8">	
+
+　　<!-- スマートフォンの表示に関する設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
+
+    <!--
+	Monacaのセキュリティポリシーと呼ばれる情報の設定
+	Monacaを使っていないのでは不要なのかも？というか外すべき？ 
+
+    <meta http-equiv="Content-Security-policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    -->
+    <script src="../../components/loader.js"></script>
+    <script src="../../lib/onsenui/js/onsenui.min.js"></script>
+
+
+    <link rel="stylesheet" href="../../components/loader.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsen-css-components.css">
+
+<!--
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+-->
+  <script src="../main.js"></script>
+  <style>
+    .parent ul{
+      display: none;
+    }
+    .active {
+      background-color: lightgreen;
+    }
+    .active ul {
+      display: block;
+    }    
+  </style>
+
+</head>
+<body style="margin:10px;background-color:lightgreen;" onload="change_text()">
+
+<title>"Navigator"</title> 
+  <h1>SC21和坂 将棋教室 開催予定日</h1>
+  <div id="newInfo">お知らせ</div>
+  <div id='dayOfAct'>当面の活動日</div>
+  <li>場所 和坂小コミセン活動室
+    <li>　　　078-928-4110</li>
+  <li>時間 10:00 ～ 11:30</li>
+  <li>対象 小学生(※)</li>
+  <li>体験・見学希望の方は事前連絡の必要はありません。</li>
+  <li>★HPで日程を更新していても、使用端末での情報更新のタイミングがずれて最新の情報が確認できない場合もありますのでご承知ください。</li>
+  <li>※将棋を学習したい大人、子どもと対戦できる大人の参加も可能です。</li>
+  <li>和坂小学校の体育館に上がる階段の反対側(下の配置図を参照)にSC21和坂の掲示板があり、そこに日程表を貼っています。</li>
+  <img src="haichi.png" alt="SC21和坂 掲示板位置" title="SC21和坂掲示板の校舎内配置図">
+  <script>
+    function func1(e) {
+     e.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>

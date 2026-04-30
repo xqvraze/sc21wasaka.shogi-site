@@ -1,0 +1,135 @@
+﻿<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+    <!-- 文字セットの設定 -->
+    <meta charset="utf-8">	
+
+　　<!-- スマートフォンの表示に関する設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
+
+    <!--
+	Monacaのセキュリティポリシーと呼ばれる情報の設定
+	Monacaを使っていないのでは不要なのかも？というか外すべき？ 
+
+    <meta http-equiv="Content-Security-policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    -->
+    <script src="../../components/loader.js"></script>
+    <script src="../../lib/onsenui/js/onsenui.min.js"></script>
+
+
+    <link rel="stylesheet" href="../../components/loader.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsen-css-components.css">
+
+<!--
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+-->
+  <style>
+    .parent ul{
+      display: none;
+    }
+    .active {
+      background-color: lightgreen;
+    }
+    .active ul {
+      display: block;
+    }    
+  </style>
+
+</head>
+<body style="margin:10px;background-color:yellow;" onload="change_text()">
+
+<title>和坂将棋興津の公式LINEについて</title>
+  <h1>和坂将棋教室の公式LINEについて</h1> 
+  <ul>
+    <li class="parent" onclick="func1(this)">登録(友達追加)用QRコード(詳細クリック)
+      <ul>
+       <li>QRコードは入会された方のみに案内させていただいています。</li>
+       <li>公式LINEの利用が無料の場合、配信数×人数で制限が200(個別チャット数は含まない)となるため、登録者が多くなると無料使用が難しくなってきます。</li>
+       <li>登録用のQRコードはなるべく実際の将棋教室参加者以外の方の目に触れる機会が少ないようにします。</li>
+       <li>将棋教室を退会された場合は、LINEで『SC21和坂 将棋教室』をブロックまたは削除をお願いします。</li>
+       <li>当面は無料枠に余裕がありますので、退会されてもそのまま将棋教室の案内を受信していただくことも可能です。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">匿名状態での登録(詳細クリック)
+      <ul>
+       <li>登録者は他の登録者のことはわかりませんので友達招待が届くことはありません。</li>
+       <li>登録しただけでは公式側では登録者が増えたということしか把握できません。</li>
+       <li>登録しただけではSC21和坂将棋教室公式との個別チャットは開通しません。</li>
+       <li>個別チャットが開通すると登録者のニックネームがSC21和坂将棋教室公式でわかるようになります。</li>
+       <li>将棋教室との連絡をLINEで行いたい場合は個別チャットを利用しますので、匿名状態ではなくなります。</li>
+       <li>一斉配信メッセージの受け取りのみとなります。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">個別チャットの利用(詳細クリック)
+      <ul>
+       <li>将棋教室への不参加などの個別連絡に使用していただけます。</li>
+       <li>個別登録しただけではSC21和坂将棋教室公式との個別チャットは開通しません</li>
+       <li>登録しただけではSC21和坂将棋教室公式との個別チャットは開通しません</li>
+       <li>登録者側から返信することで初めて個別チャットが可能となります</li>
+       <li>登録者側から返信する方法については横スワイプをして"個別チャットの利用方法"をご覧ください。</li>
+       <li>一度チャットが行われると公式側からいつでもチャットが可能になります</li>
+       <li>チャット相手の登録者のニックネームはわかりますが本名はわかりません</li>
+       <li>初めて連絡される場合にニックネームが本名でない方は名乗っていただきますようお願いします</li>
+       <li>登録者全員への一斉配信の場合は、なるべく冒頭に「一斉配信」等の文言を入れます</li>
+       <li>公式の管理者が二人いますのでチャット応答の重複等ある場合が考えられます。ご容赦ください。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">個別チャットの利用方法 (詳細クリック)
+      <ul>
+       <li>通常のLINE使用と同様に入力欄に入力して送信することになります。</li>
+       <li>入力欄がでていない場合には、以下の画像の赤丸部分のキーボードアイコンをタップすれば入力欄が現れます。</li>
+       <li><img src="talkforInput.png" alt="入力欄の出し方" title="入力欄の出し方">
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">LINE電話の利用(詳細クリック)
+      <ul>
+       <li>LINE電話を登録者から公式へのみかけることができます</li>
+       <li>LINE電話を公式側から登録者へはかけることはできません</li>
+       <li>LINE電話の利用方法については"LINE電話の利用方法"をご覧ください。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">LINE電話の利用方法 (詳細クリック)
+      <ul>
+       <li>電話のマークを探すことになりますが、公式のLINEでは個別チャットのトークルームには電話マークはありません。</li>
+       <li>トークルームの上部の"sc21和坂将棋教室"の文字をタップすることで出てくる画面に電話マークがあります。</li>
+       <li><img src="talkforTop.png" alt="トップ画面の出し方" title="トップ画面の出し方">
+       <li><img src="TopforTel.png" alt="電話マークの場所" title="電話マークの場所">
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">紙媒体の配布(詳細クリック)
+      <ul>
+       <li>全会員にLINEと紙媒体で同様な内容を案内する場合には紙媒体不要の方には紙媒体の配布は行いません</li>
+	  <li>LINE配信では個人名、個人電話番号の記載をしないほか、挨拶の省略等の違いはあります</li>
+	  <li>緊急連絡はLINEのみ、アンケートなどは紙媒体のみとなります。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">SC21和坂 将棋教室退会時のLINEの取り扱いについて(詳細クリック)
+      <ul>
+	<li>現在の所、公式LINEから一斉配信を公式LINE登録者の中から退会された方を除いて一斉配信するという対応は完全にはできません。</li>
+	<li>将棋教室を退会された場合は、LINEで『SC21和坂 将棋教室』をブロックまたは削除をお願いします。</li>
+	<li>このようなお願いをするのは、公式LINEの一斉配信の無料配信枠に制限があるためです。</li>
+	<li>無料配信枠については"LINE公式の無料配信枠について"をご覧ください。</li>
+	<li>当面は無料枠に余裕がありますので、退会されてもそのまま将棋教室の案内を受信していただくことも可能です。</li>
+      </ul>
+    </li>   
+    <li class="parent" onclick="func1(this)">LINE公式の無料配信枠について(詳細クリック)
+      <ul> 
+	  <li>LINE公式の一斉配信は月毎に無料一斉配信枠があります。</li>
+	  <li>無料配信枠は200です。</li>
+	  <li>計算方法は毎回の(配信数)×(配信者数)の合計です。</li>
+	  <li>個別チャットでのやりとりの数はカウントされません。</li>
+	  <li>現在の将棋教室の参加者の規模では退会者にも配信をしていても無料枠は当面気にならないと思います。</li>
+      </ul>
+    </li>
+  </ul>
+
+  <script>
+    function func1(e) {
+     e.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+﻿<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+    <!-- 文字セットの設定 -->
+    <meta charset="utf-8">	
+
+　　<!-- スマートフォンの表示に関する設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
+
+    <!--
+	Monacaのセキュリティポリシーと呼ばれる情報の設定
+	Monacaを使っていないのでは不要なのかも？というか外すべき？ 
+
+    <meta http-equiv="Content-Security-policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    -->
+    <script src="../../components/loader.js"></script>
+    <script src="../../lib/onsenui/js/onsenui.min.js"></script>
+
+
+    <link rel="stylesheet" href="../../components/loader.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsen-css-components.css">
+
+<!--
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+-->
+  <script src="../main.js"></script>
+  <style>
+    .parent ul{
+      display: none;
+    }
+    .active {
+      background-color: lightgreen;
+    }
+    .active ul {
+      display: block;
+    }    
+  </style>
+
+</head>
+<body style="margin:10px;background-color:lightgreen;" onload="change_text()">
+
+<title>"Navigator"</title> 
+  <h1>SC21和坂 将棋教室 問題</h1>
+  ※スマホでは画像が見えない場合があります。<br>
+   　時間をおいて再度開いてみてください。
+
+    <li class="parent" onclick="func1(this)">将棋問題#1 将棋用語 (クリック)
+      <ul>
+       <li><img src="test2501.png" alt="問題#1" title="将棋用語"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#2 将棋用語 (クリック)
+      <ul>
+       <li><img src="test2502.png" alt="問題#2" title="将棋用語"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#3 両取り(飛車・角) (クリック)
+      <ul>
+       <li><img src="test2503.png" alt="問題#3" title="両取り(飛車・角)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#4 両取り(金・銀) (クリック)
+      <ul>
+       <li><img src="test2504.png" alt="問題#4" title="両取り(金・銀)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#5 両取り(桂馬・香車) (クリック)
+      <ul>
+       <li><img src="test2505.png" alt="問題#5" title="両取り(桂馬・香車)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#6 歩の使い方 (クリック)
+      <ul>
+       <li><img src="test2506.png" alt="問題#6" title="歩の使い方"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#7 居玉・居飛車・振り飛車 (クリック)
+      <ul>
+       <li><img src="test2507.png" alt="問題#7" title="居玉・居飛車・振り飛車"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#8 初手候補・飛車先を突く・角道を開ける (クリック)
+      <ul>
+       <li><img src="test2508.png" alt="問題#8" title="初手候補・飛車先を突く・角道を開ける"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#9 美濃囲い、矢倉囲い(クリック)
+      <ul>
+       <li><img src="test2509.png" alt="問題#9" title="美濃囲い、矢倉囲い"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#10 角頭での攻防(クリック)
+      <ul>
+       <li><img src="test2510.png" alt="問題#10" title="角頭での攻防"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#11 角頭での攻防、囲い・戦法の復習(クリック)
+      <ul>
+       <li><img src="test2511.png" alt="問題#11" title="角頭での攻防、囲い・戦法の復習"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#12 先手後手基本問題(クリック)
+      <ul>
+       <li><img src="test2512.png" alt="問題#12" title="先手後手基本問題"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#13 利きの数問題(1)(クリック)
+      <ul>
+       <li><img src="test2513.png" alt="問題#13" title="利きの数問題(1)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#14 利きの数問題(2)(クリック)
+      <ul>
+       <li><img src="test2514.png" alt="問題#14" title="利きの数問題(2)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#15 角交換で先手後手順番逆転(クリック)
+      <ul>
+       <li><img src="test2515.png" alt="問題#15" title="角交換で先手後手順番逆転"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#16 居飛車の攻め手(クリック)
+      <ul>
+       <li><img src="test2516.png" alt="問題#16" title="居飛車の攻め手"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#17 居飛車の攻め手(2)(クリック)
+      <ul>
+       <li><img src="test2517.png" alt="問題#17" title="居飛車の攻め手(2)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#18 居飛車の攻め手(3)(クリック)
+      <ul>
+       <li><img src="test2518.png" alt="問題#18" title="居飛車の攻め手(3)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#19 居飛車の攻め手(4)(クリック)
+      <ul>
+       <li><img src="test2519.png" alt="問題#19" title="居飛車の攻め手(4)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#20 棒銀の受け(クリック)
+      <ul>
+       <li><img src="test2520.png" alt="問題#20" title="棒銀の受け(1)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#21 棒銀の受け(クリック)
+      <ul>
+       <li><img src="test2521.png" alt="問題#21" title="棒銀の受け(2)"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#22 焦点の歩(クリック)
+      <ul>
+       <li><img src="test2522.png" alt="問題#22" title="焦点の歩"></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋問題#23 争点を変える手筋(クリック)
+      <ul>
+       <li><img src="test2523.png" alt="問題#23" title="争点を変える手筋"></li>
+      </ul>
+    </li>
+  <script>
+    function func1(e) {
+     e.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>

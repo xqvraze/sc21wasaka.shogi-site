@@ -1,0 +1,92 @@
+﻿<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+    <!-- 文字セットの設定 -->
+    <meta charset="utf-8">	
+
+　　<!-- スマートフォンの表示に関する設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
+
+    <!--
+	Monacaのセキュリティポリシーと呼ばれる情報の設定
+	Monacaを使っていないのでは不要なのかも？というか外すべき？ 
+
+    <meta http-equiv="Content-Security-policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    -->
+    <script src="../../components/loader.js"></script>
+    <script src="../../lib/onsenui/js/onsenui.min.js"></script>
+
+
+    <link rel="stylesheet" href="../../components/loader.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="../../lib/onsenui/css/onsen-css-components.css">
+
+<!--
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+-->
+  <style>
+    .parent ul{
+      display: none;
+    }
+    .active {
+      background-color: lightgreen;
+    }
+    .active ul {
+      display: block;
+    }    
+  </style>
+
+</head>
+<body style="margin:10px;background-color:yellow;" onload="change_text()">
+
+<title>和坂将棋教室会費について</title>
+  <h1>和坂将棋教室の会費について</h1>
+  <ul>
+    <li>会費 年間3600円(途中入会は月割り計算)</li>
+    <li class="parent" onclick="func1(this)">★他種目(サッカー、ショートテニス等)への参加も希望される場合(詳細クリック)
+      <ul>
+	<li>他の種目を窓口(主要種目)としてSC21へ会費の納入、登録することがてぎます。継続会員の方で今年度から他種目の窓口に変更される方は他種目役員の方への引継ぎなどお手伝いさせていただきます。</li>
+       	<li>◎説明</li>
+	<li>SC21は会員になるとどの種目で会費を納入されても、開設されている全種目に参加することができます。</li>
+	<li>他種目で会費を納入されていても将棋教室に参加していただけます。</li>
+	<li>SC21和坂では、総会(例年5月第3木曜日開催)時点での会費納入金額に応じて各種目に活動費が配分されます。</li>
+	<li>将棋教室においては、他種目に比べますと活動費の必要性は少なく、不足しがちな他種目での会費納入をしていただけると助かります。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">★新3年生の将棋教室の参加について(詳細クリック)
+      <ul>
+       <li>年度の途中(令和5年度は7/22の夏休み)から土曜日の9:30～11:00に開催される<a href="http://www.edi.akashi.hyogo.jp/kyoiku/shakai_kyouiku/wakuwaku.php">「わくわく地域未来塾」</a>に参加される可能性がある場合は半期での会費納入、またビジターでの参加もご検討ください。</li>
+       <li>◎説明</li>
+       <li>規約により一度納入された会費の返金はよほどのことがない限り認められません。</li>
+       <li>明石市では、平成28年度から、学習内容が量的にも質的にも多くて複雑になり、授業の理解が不十分になりやすい時期である小学3年生を対象とした学習教室「わくわく地域未来塾」が開催されています。活動時間が重なるため、将棋教室には11:00～11:30の30分間しか参加できないことになります。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">★ビジター会員制度について (詳細クリック)
+      <ul>
+      	<li>ビジター会費(子ども200円)を納入して当日のみ参加する制度があります。</li>
+       	<li>◎説明</li>
+	<li>原則月2回の将棋教室では、正会員(1回150円)に比べて少し割高となります。</li>
+	<li>参加する度に、ビジター会費の納入など活動前の手続きが必要となります。</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">★学童(放課後児童クラブ)について(詳細クリック)
+      <ul>
+       	<li>在籍していても将棋教室への参加は可能です。</li>
+       	<li>◎説明</li>
+       	<li>9時 学童へ登校</li>
+	<li>10時 将棋教室へ参加</li>
+	<li>11時30分 将棋教室終了</li>
+	<li>11時30分 学童へ戻る</li>
+	<li>学童の支援員の了解を取って将棋教室へ参加してください。</li>
+      </ul>
+    </li>
+  </ul>
+  <script>
+    function func1(e) {
+     e.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>

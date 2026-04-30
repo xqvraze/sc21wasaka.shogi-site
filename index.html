@@ -1,0 +1,133 @@
+﻿<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+    <!-- 文字セットの設定 -->
+    <meta charset="utf-8">	
+
+　　<!-- スマートフォンの表示に関する設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
+
+    <!--
+	Monacaのセキュリティポリシーと呼ばれる情報の設定
+	Monacaを使っていないのでは不要なのかも？というか外すべき？ 
+
+    <meta http-equiv="Content-Security-policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    -->
+    <script src="components/loader.js"></script>
+    <script src="lib/onsenui/js/onsenui.min.js"></script>
+
+
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
+
+<!--
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+-->
+  <script src="main.js"></script>
+
+  <style>
+    .parent ul{
+      display: none;
+    }
+    .active {
+      background-color: lightgreen;
+    }
+    .active ul {
+      display: block;
+    }    
+  </style>
+
+</head>
+<body style="margin:10px;background-color:cyan;" onload="change_text()">
+
+<title>SC21和坂将棋教室</title>
+  <h1>SC21和坂将棋教室</h1>
+  <div id="newInfo">お知らせ</div>
+  <div id='dayOfAct'>当面の活動日</div>
+  <ul>
+    <li class="parent" onclick="func1(this)">活動日/活動場所/活動時間等 (詳細クリック)
+      <ul>
+       <li>活動日 : 原則　第1土曜日、第3土曜日</li>
+	<p>※活動日変更基準<br>
+	　・地域・学校行事がある場合は活動日を変更します。<br>
+	　・3連休の中日(なかび)での活動はなるべくしません。<br>
+	　・学校の長期休暇開始直後、終了直前の活動はなるべくしません。</p>
+       <li>活動時間 : 10:00～11:30</li>
+       <li>活動場所 : 和坂小学校 コミセン 活動室(体育館(2F)の1F部分)</li>
+            <li>対象 小学生(※)
+       <li>体験・見学希望の方は事前連絡の必要はありません。</li>
+       <li>★HPで日程を更新していても、使用端末での情報更新のタイミングがずれて最新の情報が確認できない場合もありますのでご承知ください。</li>
+       <li>将棋を学習したい大人、子どもと対戦できる大人の参加も可能です。
+       <li>和坂小学校の体育館に上がる階段の反対側(下の配置図を参照)にSC21和坂の掲示板があり、そこに日程表を貼っています。</li>
+       <img src="開催予定日/haichi.png" alt="SC21和坂 掲示板位置" title="SC21和坂掲示板の校舎内配置図">
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">参加時の注意事項(詳細クリック)
+      <ul>	
+       <li>自宅での検温をお願いします。</li>
+              <li>マスクの着用は任意となります</li>
+       <li>ハンカチ・タオル、必要に応じて水分補給用水筒を持参ください</li>
+       <li>小学生の児童は自転車使用しないでください</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">警報発令時の対応(詳細クリック)
+      <ul>
+       <li>当日、午前9時30分に警報発令中であれば中止します</li>
+       <li>活動中の警報発令について</li>
+	<p>SC21の活動は即中止・即帰宅となっています<br>
+          ※ただし、帰宅に関しましては、お子様の安全を最優先に柔軟に対応します</p>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">学級閉鎖時の対応(詳細クリック)
+      <ul>
+       <li>当該学級に在籍する児童本人が元気でも将棋教室への参加は自粛をお願いします。</li>
+	<p>学級閉鎖時には不必要な外出を控えるという学校の方針に従います。</p>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">将棋教室公式LINEについて(詳細クリック)
+      <ul>
+       <li>LINE登録を希望されない方には電話、紙媒体での連絡で従来通り対応させていただきます。</li>
+       <li>詳細は<a href="和坂将棋教室公式LINE/index.html">こちら</a></li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">連絡先 和坂コミセン 078-928-4110 (詳細クリック)<br>連絡が必要な場合にこの電話から連絡します。<br>登録をお願いします。
+      <ul>
+       <li>火曜日～金曜日 	15:00～21:00</li>
+       <li>土曜日 		 9:00～21:00</li>
+       <li>日曜日		 9:00～17:00</li>
+       <li>月曜日・祝日閉館</li>
+      </ul>
+    </li>
+    <li class="parent" onclick="func1(this)">スポーツクラブ21(SC21)について(詳細クリック)
+      <ul>
+              <li>将棋教室の対象である小学生について案内します。</li>
+       <li>会費 : 年間 3600円 (途中入会は月割計算)<br>
+           会費は明石市内の各小学校区の全てのSC21で取り決められた一律の金額です<br>
+           入会すると、SC21和坂で開設されている全ての種目に参加が可能です<br>
+	     その際には、「将棋教室で会費を支払い済み」と伝えてから参加してください<br>
+           ご希望であれば、他種目への橋渡しをさせていただきます</li>
+       <li>家族会員(年間 12000円)で加入された方がお得になる場合があります。</li>
+	 <li>SC21和坂の総会への参加について<br>
+           子ども会員には議決権はありませんが会員および保護者の方の傍聴は可能です</li>
+      </ul>
+    </li>
+    <li><a href="将棋教室問題/index.html">将棋教室問題</a></li>
+    <li class="parent" onclick="func1(this)">将棋関連ゲーム (詳細クリック)
+      <ul>
+       <li><a href="はじめての模倣将棋/index.html">人対人 対局(王をとっても終わらない)</a></li>
+       <li><a href="将棋パズル/index.html">将棋パズル(開発中)</a></li>
+      </ul>
+    </li>
+    <li><a href="漢字パズル/index.html">漢字パズル(開発中)</a></li>
+  </ul>
+
+  <script>
+    function func1(e) {
+     e.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>
