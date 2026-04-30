@@ -2,14 +2,47 @@
 <html>
   <head>
     <meta charset="shift_jis">
-    <title>将棋対局ゲーム</title>
-    <script src="main.js"></script>
-  </head>
-  <body onload="init()">
+    <title>将棋パズル</title>
+ </head>
+  <body   onload="hide_manage()">
     <canvas id="world"></canvas>
     <form onsubmit="return false">
+ 	<input type="button" value="最初に戻る" onClick="MoveStart()"><input type="button" value="一手戻る" onClick="prevMove()"><input type="button" value="一手進む" onClick="nextMove()"><input type="button" id="save_kifu" value="棋譜保存" onClick="savekifu()"><span>棋譜ロード</span><input type="file" accept=".txt" multiple id="readkifu_btn"><br><br>
+        <label>問題レベル選択:
+          <select id="select_level" onchange="select_level_menu(this)">
+            <option value="初級">初級</option>
+            <option value="中級">中級</option>
+            <option value="上級">上級</option>
+            <option value="その他">その他</option>
+          </select>
+        </label>
+        <div id="quiz_list" display="inline">問題リスト表示</div><div class="clear_point" id="answer_list">解答リスト</div><br>
+ 	<input type="button" value="前の問題" onClick="prevQuiz()"><span><input type="button" value="次の問題" onClick="nextQuiz()"></span><span id="quiz_name">問題名表示欄</span><span id="min_moves">最短手数</span><br>
+	<input type="text" class="manage" id="username" value=""><input type="button" class="manage" id="btn_usename" value="登録" onClick="makeReloadStr()"><span id="Reword" class="manage">復活の呪文</span>
 	<input type="button" id="btn_mode" value="ゲーム開始" onClick="changeMode()"><span id="modeL">盤面設定中</span>
+	<input type="button" value="問題保存" onClick="saveQuiz()">	<input type="text" id="filename" value="">
+	<span>問題ロード</span><input type="file" accept=".dat" multiple id="loadbtn">
+        <br>
+	<input type="button" value="やり直し" id="Retry" onClick="init()"><input type="button" value="盤面クリア" id="ban_clear" onClick="banClear()"><br>
+	<div class="manage">
+          <input type="text" id="seek_max" value="20">最大探索手数<input type="button" value="自動解答" onClick="AutoAnswer()"><span id="min_moves_answer">自動解答手数</span><br>
+          <input type="button" value="棋譜洗練" onClick="kifu_shorter()"><input type="button" value="問題重複チェック" onClick="checkQuiz_same()"><input type="button" value="問題入力チェック" onClick="checkQuiz_Date()">
+        </div>
+        <br><br><a href="https://www.i-tsu-tsu.co.jp/">株式会社 いつつの将棋</a>のパズルを利用しています。<br>
     </form>
-    <a href="main.js">main.js</a>の表示<br>
+
+
+    <script src="stools.js"></script>
+    <script src="setting.js"></script>
+    <script src="Solver.js"></script>
+    <script src="QuizSetData1.js"></script>
+    <script src="QuizSetData0.js"></script>
+    <script src="QuizSetData.js"></script>
+    <script src="AnswerSetData1.js"></script>
+    <script src="AnswerSetData0.js"></script>
+    <script src="AnswerSetData.js"></script>
+
+    <!- headタグ内のような上方配置ではファイル読み込みがうまく動作しなかった -->
+    <script src="main.js"></script>
   </body>
 </html>
