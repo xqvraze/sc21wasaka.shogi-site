@@ -23,7 +23,7 @@ function change_text(){
 	document.getElementById('newInfo').innerHTML = msgNewInfo;
 
 	//当面の活動日
-	var msgCalender = '<p>当面の活動日 5/9(土)、5/23(土)、<span style="text-decoration-line: line-through; text-decoration-style: double;">6/6(土)</span>、※追加6/20(土)、7/11(土)、7/18(土)<br>※参考情報<br>6/6(土) 修学旅行<br>6/20(土) 5年生自然学校<br>7/4(土) 指導者都合<br>7/21(火) 1学期終業式<br>7/26(土) 和坂納涼祭</p>';
+	var msgCalender = '<p>当面の活動日 5/9(土)、5/23(土)、<span style="text-decoration-line: line-through; text-decoration-style: double;">6/6(土)</span>、※追加6/13(土)、6/20(土)、7/11(土)、7/18(土)<br>※参考情報<br>6/6(土) 修学旅行<br>6/20(土) 5年生自然学校<br>7/4(土) 指導者都合<br>7/21(火) 1学期終業式<br>7/26(土) 和坂納涼祭</p>';
 document.getElementById('dayOfAct').innerHTML = msgCalender;
 
 }
