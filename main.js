@@ -19,7 +19,7 @@ function goPage(page){
 
 function change_text(){
 	//お知らせ内容
-	var msgNewInfo = 'お知らせ 2026/8/7現在';
+	var msgNewInfo = 'お知らせ 2026/8/9現在';
 	document.getElementById('newInfo').innerHTML = msgNewInfo;
 
 	//当面の活動日
